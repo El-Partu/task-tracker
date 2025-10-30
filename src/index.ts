@@ -15,7 +15,7 @@ try {
   console.log("Error trying to read the file", err);
 }
 
-if(process.argv.length > 2){
+if (process.argv.length > 2) {
   // Creating a task[Create]
   if (process.argv[2] === "add") {
     const dbLength: number = data.length;
@@ -58,7 +58,19 @@ if(process.argv.length > 2){
       console.log(data);
 
       process.exit(1);
-    } else if (process.argv) {
+    } else if (process.argv[3] === "done") {
+      let completedTask: Task[] = [];
+      completedTask = data.filter((el) => el.status === Status.DONE);
+
+      if (completedTask.length === 0) {
+        console.log("No task has been completed yet");
+        process.exit(1);
+      }
+      console.log(
+        "===================== LIST OF COMPLETED TASK ====================="
+      );
+      console.log(completedTask)
+      process.exit(1);
     }
   }
 
@@ -75,7 +87,7 @@ if(process.argv.length > 2){
   } else {
     console.log("command not found");
   }
-}else{
-  console.log("")
-  process.exit(1)
+} else {
+  console.log("");
+  process.exit(1);
 }

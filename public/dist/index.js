@@ -53,7 +53,16 @@ if (process.argv.length > 2) {
             console.log(data);
             process.exit(1);
         }
-        else if (process.argv) {
+        else if (process.argv[3] === "done") {
+            let completedTask = [];
+            completedTask = data.filter((el) => el.status === Status.DONE);
+            if (completedTask.length === 0) {
+                console.log("No task has been completed yet");
+                process.exit(1);
+            }
+            console.log("===================== LIST OF COMPLETED TASK =====================");
+            console.log(completedTask);
+            process.exit(1);
         }
     }
     // Updating a task[Update]
