@@ -5,68 +5,77 @@ import { fileURLToPath } from "url";
 import type { Task } from "./types/alias.js";
 import { Status } from "./types/enum.js";
 
-const dbPath = path.resolve(process.cwd(), 'db.json');
-let data: Task[] = []
+const dbPath = path.resolve(process.cwd(), "db.json");
+let data: Task[] = [];
 
 //Reading from db.json file
-try{
- data = JSON.parse(fs.readFileSync(dbPath, "utf-8", ));
-
-}catch(err){
-  console.log("Error trying to read the file", err)
+try {
+  data = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
+} catch (err) {
+  console.log("Error trying to read the file", err);
 }
 
-// Creating a task[Create]
-if (process.argv[2] === "add") {
-  const dbLength: number = data.length;
+if(process.argv.length > 2){
+  // Creating a task[Create]
+  if (process.argv[2] === "add") {
+    const dbLength: number = data.length;
 
-  if (process.argv.length === 3) {
-    console.log("Please provide a description for the task");
-    process.exit(1);
-  } else if (process.argv.length === 4 && process.argv[3] !== undefined) {
-    
-    //Creating a task
-    let task: Task = {
-      id: dbLength + 1,
-      description: process.argv[3],
-      status: Status.TODO,
-      createdAt: new Date(Date.now()).toISOString(),
-      updateAt: null,
-    };
+    if (process.argv.length === 3) {
+      console.log("Please provide a description for the task");
+      process.exit(1);
+    } else if (process.argv.length === 4 && process.argv[3] !== undefined) {
+      //Creating a task
+      let task: Task = {
+        id: dbLength + 1,
+        description: process.argv[3],
+        status: Status.TODO,
+        createdAt: new Date(Date.now()).toISOString(),
+        updateAt: null,
+      };
 
-    // Adding the task to the db
-    data.push(task);
-    
-    //Writing the task to the json file
-    try{
-      fs.writeFileSync(dbPath, JSON.stringify(data));
-      console.log("Task added successfully!")
-    }catch(err){
-      console.log("Error", err)
+      // Adding the task to the db
+      data.push(task);
+
+      //Writing the task to the json file
+      try {
+        fs.writeFileSync(dbPath, JSON.stringify(data));
+        console.log("Task added successfully!");
+      } catch (err) {
+        console.log("Error", err);
+      }
+
+      process.exit(1);
+    } else {
+      console.log("You've provided to many argument");
+      process.exit(1);
     }
-
-    process.exit(1);
-  } else {
-    console.log("You've provided to many argument");
-    process.exit(1);
   }
-} 
 
-// Listing of Tasks[Read]
-else if (process.argv[2] === "list") {
+  // Listing of Tasks[Read]
+  else if (process.argv[2] === "list") {
+    if (process.argv.length === 3) {
+      console.log("==================== LIST OF TASKs ====================");
+      console.log(data);
 
-}
+      process.exit(1);
+    } else if (process.argv) {
+    }
+  }
 
-// Updating a task[Update]
-else if (process.argv[2] === "updating") {
-} 
+  // Updating a task[Update]
+  else if (process.argv[2] === "updating") {
+  }
 
-// Marking task as 'in-progress'
-else if (process.argv[2] === "mark-in-progress") {
-}
+  // Marking task as 'in-progress'
+  else if (process.argv[2] === "mark-in-progress") {
+  }
 
-// Marking task as done
-else if (process.argv[2] === "mark-done") {
-} else {
-  console.log("command not found");
+  // Marking task as done
+  else if (process.argv[2] === "mark-done") {
+  } else {
+    console.log("command not found");
+  }
+}else{
+  console.log("")
+  process.exit(1)
 }
