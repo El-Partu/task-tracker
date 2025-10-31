@@ -78,9 +78,15 @@ if (process.argv.length > 2) {
         }
     }
     // Updating a task[Update]
-    else if (process.argv[2] === "update") {
-        if (process.argv.length !== 5) {
+    else if (process.argv[2] === "update" ||
+        process.argv[2] === "mark-in-progress" ||
+        process.argv[2] === "mark-done") {
+        if (process.argv[2] === "update" && process.argv.length !== 5) {
             console.log("Please provide the necessary argument in the form: 'task-cli update {task id} {new task description}'");
+            process.exit(1);
+        }
+        else if (process.argv[2] !== "update" && process.argv.length !== 4) {
+            console.log("Please provide the necessary argument in the form: 'task-cli mark-done/mark-in-progress {task id}");
             process.exit(1);
         }
         const taskId = Number(process.argv[3]);
@@ -88,19 +94,42 @@ if (process.argv.length > 2) {
             console.log("Provide a valid task Id! Task id must be a number.");
             process.exit();
         }
-        const task = data.find(el => el.id === taskId);
+        const task = data.find((el) => el.id === taskId);
         if (!task) {
             console.log(`No task found with ID ${taskId}`);
             process.exit(1);
         }
-        const newTask = {
-            id: task.id,
-            description: process.argv[4],
-            status: task.status,
-            createdAt: task.createdAt,
-            updateAt: new Date(Date.now()).toISOString()
-        };
-        const newData = data.map(el => {
+        let newTask;
+        if (process.argv[2] === "update") {
+            newTask = {
+                id: task.id,
+                description: process.argv[4],
+                status: task.status,
+                createdAt: task.createdAt,
+                updateAt: new Date(Date.now()).toISOString(),
+            };
+        }
+        else if (process.argv[2] === "mark-in-progress") {
+            // Marking task as 'in-progress'
+            newTask = {
+                id: task.id,
+                description: task.description,
+                status: Status.INPROGRESS,
+                createdAt: task.createdAt,
+                updateAt: new Date(Date.now()).toISOString(),
+            };
+        }
+        else if (process.argv[2] === "mark-done") {
+            // Marking task as done
+            newTask = {
+                id: task.id,
+                description: task.description,
+                status: Status.DONE,
+                createdAt: task.createdAt,
+                updateAt: new Date(Date.now()).toISOString(),
+            };
+        }
+        const newData = data.map((el) => {
             if (el.id === taskId) {
                 return newTask;
             }
@@ -115,12 +144,6 @@ if (process.argv.length > 2) {
             console.log("Error while saving update", err);
             process.exit(1);
         }
-    }
-    // Marking task as 'in-progress'
-    else if (process.argv[2] === "mark-in-progress") {
-    }
-    // Marking task as done
-    else if (process.argv[2] === "mark-done") {
     }
     else {
         console.log("command not found");

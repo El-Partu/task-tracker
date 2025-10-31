@@ -17,14 +17,13 @@ try {
 if (process.argv.length > 2) {
   // Creating a task[Create]
   if (process.argv[2] === "add") {
-
     if (process.argv.length === 3) {
       console.log("Please provide a description for the task");
       process.exit(1);
     } else if (process.argv.length === 4 && process.argv[3] !== undefined) {
       //Creating a task
       let task: Task = {
-        id:  data.length + 1,
+        id: data.length + 1,
         description: process.argv[3],
         status: Status.TODO,
         createdAt: new Date(Date.now()).toISOString(),
@@ -91,58 +90,81 @@ if (process.argv.length > 2) {
   }
 
   // Updating a task[Update]
-  else if (process.argv[2] === "update") {
-    if(process.argv.length !== 5){
-      console.log("Please provide the necessary argument in the form: 'task-cli update {task id} {new task description}'")
-      process.exit(1)
+  else if (
+    process.argv[2] === "update" ||
+    process.argv[2] === "mark-in-progress" ||
+    process.argv[2] === "mark-done"
+  ) {
+    if (process.argv[2] === "update" && process.argv.length !== 5) {
+      console.log(
+        "Please provide the necessary argument in the form: 'task-cli update {task id} {new task description}'"
+      );
+      process.exit(1);
+    } else if (process.argv[2] !== "update" && process.argv.length !== 4) {
+      console.log(
+        "Please provide the necessary argument in the form: 'task-cli mark-done/mark-in-progress {task id}"
+      );
+      process.exit(1);
+    }
+    const taskId: number | undefined = Number(process.argv[3]);
+
+    if (Number.isNaN(taskId)) {
+      console.log("Provide a valid task Id! Task id must be a number.");
+      process.exit();
     }
 
-    const taskId:number | undefined = Number(process.argv[3])
+    const task: Task | undefined = data.find((el) => el.id === taskId);
 
-    if(Number.isNaN(taskId)){
-      console.log("Provide a valid task Id! Task id must be a number.")
-      process.exit()
-    }
-    
-    const task:Task |undefined = data.find(el => el.id === taskId)
-
-    if(!task){
-      console.log(`No task found with ID ${taskId}`)
-      process.exit(1)
+    if (!task) {
+      console.log(`No task found with ID ${taskId}`);
+      process.exit(1);
     }
 
-    const newTask:Task ={
-      id: task.id,
-      description: process.argv[4]!,
-      status: task.status,
-      createdAt: task.createdAt,
-      updateAt: new Date(Date.now()).toISOString()
+    let newTask: Task;
+
+    if (process.argv[2] === "update") {
+      newTask = {
+        id: task.id,
+        description: process.argv[4]!,
+        status: task.status,
+        createdAt: task.createdAt,
+        updateAt: new Date(Date.now()).toISOString(),
+      };
+    } else if (process.argv[2] === "mark-in-progress") {
+      // Marking task as 'in-progress'
+      newTask = {
+        id: task.id,
+        description: task.description,
+        status: Status.INPROGRESS,
+        createdAt: task.createdAt,
+        updateAt: new Date(Date.now()).toISOString(),
+      };
+    } else if (process.argv[2] === "mark-done") {
+      // Marking task as done
+      newTask = {
+        id: task.id,
+        description: task.description,
+        status: Status.DONE,
+        createdAt: task.createdAt,
+        updateAt: new Date(Date.now()).toISOString(),
+      };
     }
+      const newData = data.map((el) => {
+        if (el.id === taskId) {
+          return newTask;
+        }
+        return el;
+      });
 
-    const newData = data.map(el => {
-      if(el.id === taskId){
-        return newTask
-      }
-      return el
-    })
+    try {
+      fs.writeFileSync(dbPath, JSON.stringify(newData));
 
-    try{
-      fs.writeFileSync(dbPath, JSON.stringify(newData))
-
-      console.log(`Task with ID ${taskId} updated successfully.`)
-      process.exit(1)
-    }catch(err){
-      console.log("Error while saving update", err)
-      process.exit(1)
+      console.log(`Task with ID ${taskId} updated successfully.`);
+      process.exit(1);
+    } catch (err) {
+      console.log("Error while saving update", err);
+      process.exit(1);
     }
-  }
-
-  // Marking task as 'in-progress'
-  else if (process.argv[2] === "mark-in-progress") {
-  }
-
-  // Marking task as done
-  else if (process.argv[2] === "mark-done") {
   } else {
     console.log("command not found");
   }
