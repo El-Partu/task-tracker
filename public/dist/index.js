@@ -5,7 +5,6 @@ import { fileURLToPath } from "url";
 import { Status } from "./types/enum.js";
 const dbPath = path.resolve(process.cwd(), "db.json");
 let data = [];
-console.log(process.argv);
 //Reading from db.json file
 try {
     data = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
@@ -80,7 +79,43 @@ if (process.argv.length > 2) {
         }
     }
     // Updating a task[Update]
-    else if (process.argv[2] === "updating") {
+    else if (process.argv[2] === "update") {
+        if (process.argv.length !== 5) {
+            console.log("Please provide the necessary argument in the form: 'task-cli update {task id} {new task description}'");
+            process.exit(1);
+        }
+        const taskId = Number(process.argv[3]);
+        if (Number.isNaN(taskId)) {
+            console.log("Provide a valid task Id! Task id must be a number.");
+            process.exit();
+        }
+        const task = data.find(el => el.id === taskId);
+        if (!task) {
+            console.log(`No task found with ID ${taskId}`);
+            process.exit(1);
+        }
+        const newTask = {
+            id: task.id,
+            description: process.argv[4],
+            status: task.status,
+            createdAt: task.createdAt,
+            updateAt: new Date(Date.now()).toISOString()
+        };
+        const newData = data.map(el => {
+            if (el.id === taskId) {
+                return newTask;
+            }
+            return el;
+        });
+        try {
+            fs.writeFileSync(dbPath, JSON.stringify(newData));
+            console.log(`Task with ID ${taskId} updated successfully.`);
+            process.exit(1);
+        }
+        catch (err) {
+            console.log("Error while saving update", err);
+            process.exit(1);
+        }
     }
     // Marking task as 'in-progress'
     else if (process.argv[2] === "mark-in-progress") {
