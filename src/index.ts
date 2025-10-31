@@ -167,8 +167,16 @@ if (process.argv.length > 2) {
     }
   } else {
     console.log("command not found");
+    process.exit(1)
   }
 } else {
-  console.log("");
+  console.log(" =================== COMMANDS ACCEPTED =================== ");
+  console.log("task-cli add {task description in quote}");
+  console.log("task-cli list");
+  console.log("task-cli list done");
+  console.log("task-cli list in-progress");
+  console.log("task-cli update {task-id} {new description in quote}");
+  console.log("task-cli mark-in-progress {task-id}");
+  console.log("task-cli mark-done {task-id}");
   process.exit(1);
 }
