@@ -92,7 +92,7 @@ if (process.argv.length > 2) {
         const taskId = Number(process.argv[3]);
         if (Number.isNaN(taskId)) {
             console.log("Provide a valid task Id! Task id must be a number.");
-            process.exit();
+            process.exit(1);
         }
         const task = data.find((el) => el.id === taskId);
         if (!task) {
@@ -100,7 +100,7 @@ if (process.argv.length > 2) {
             process.exit(1);
         }
         let newTask;
-        if (process.argv[2] === "update") {
+        if (process.argv[2] === "update" && process.argv[4] !== undefined) {
             newTask = {
                 id: task.id,
                 description: process.argv[4],
