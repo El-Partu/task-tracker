@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 import { Status } from "./types/enum.js";
 const dbPath = path.resolve(process.cwd(), "db.json");
 let data = [];

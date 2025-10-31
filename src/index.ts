@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 import type { Task } from "./types/alias.js";
 import { Status } from "./types/enum.js";
 
