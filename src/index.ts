@@ -22,8 +22,11 @@ if (process.argv.length > 2) {
       process.exit(1);
     } else if (process.argv.length === 4 && process.argv[3] !== undefined) {
       //Creating a task
+
+      let taskId: number = data.length === 0 ? 1 : data[data.length - 1]?.id! + 1;
+
       let task: Task = {
-        id: data.length + 1,
+        id: taskId,
         description: process.argv[3],
         status: Status.TODO,
         createdAt: new Date(Date.now()).toISOString(),
@@ -93,20 +96,24 @@ if (process.argv.length > 2) {
   else if (
     process.argv[2] === "update" ||
     process.argv[2] === "mark-in-progress" ||
-    process.argv[2] === "mark-done"
+    process.argv[2] === "mark-done" ||
+    process.argv[2] === "delete"
   ) {
     if (process.argv[2] === "update" && process.argv.length !== 5) {
       console.log(
         "Please provide the necessary argument in the form: 'task-cli update {task id} {new task description}'"
       );
       process.exit(1);
-    } else if (process.argv[2] !== "update" && process.argv.length !== 4) {
+    } else if (process.argv[2] !== "delete" && process.argv.length !== 4) {
       console.log(
         "Please provide the necessary argument in the form: 'task-cli mark-done/mark-in-progress {task id}"
       );
       process.exit(1);
+    }else if (process.argv[2] === "delete" && process.argv.length !== 4){
+      console.log("Please provide the correct arguments in the form: 'task-cli delete {task-id}")
+      process.exit(1)
     }
-    const taskId: number | undefined = Number(process.argv[3]);
+      const taskId: number | undefined = Number(process.argv[3]);
 
     if (Number.isNaN(taskId)) {
       console.log("Provide a valid task Id! Task id must be a number.");
@@ -149,17 +156,28 @@ if (process.argv.length > 2) {
         updateAt: new Date(Date.now()).toISOString(),
       };
     }
-      const newData = data.map((el) => {
+
+    let newData:Task[] |undefined = [];
+    if(process.argv[2] !== "delete"){
+      newData = data.map((el) => {
         if (el.id === taskId) {
           return newTask;
         }
         return el;
       });
+    }else{
+      newData = data.filter(el => el.id !== taskId)
+    }
 
     try {
       fs.writeFileSync(dbPath, JSON.stringify(newData));
 
-      console.log(`Task with ID ${taskId} updated successfully.`);
+      if (process.argv[2] !== "delete"){
+        console.log(`Task with ID ${taskId} updated successfully.`);
+        process.exit(1);
+      }
+
+      console.log(`Task with ID ${taskId} deleted successfully.`);
       process.exit(1);
     } catch (err) {
       console.log("Error while saving update", err);
@@ -167,9 +185,9 @@ if (process.argv.length > 2) {
     }
   } else {
     console.log("command not found");
-    process.exit(1)
+    process.exit(1);
   }
-} else {
+}else {
   console.log(" =================== COMMANDS ACCEPTED =================== ");
   console.log("task-cli add {task description in quote}");
   console.log("task-cli list");
