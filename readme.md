@@ -1,4 +1,5 @@
 # TASK TRACKER
+Run the command `npm link` to create a link for the command "task-cli" in the node file
 ### Adding a new task
 To create a new task use:
 `task-cli add "Buy groceries"`
