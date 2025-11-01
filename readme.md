@@ -12,7 +12,7 @@ The command below is to update and existing task and as well delete a task respe
 
 ### Marking a task as in progress or done
 use the command below to mark a task as in-progress or done
-`task-cli mark-in-progress 1`
+`task-cli mark-in-progress 1` and
 `task-cli mark-done 1`
 
 ### Listing all taskst 
@@ -21,6 +21,6 @@ Use this command to list all task
 
 ### Listing tasks by status
 Use the command below to list task whose status are "done", "todo" and "in-progress"
-`task-cli list done`
-`task-cli list todo`
+`task-cli list done` and
+`task-cli list todo` and
 `task-cli list in-progress`
