@@ -7,13 +7,13 @@ To create a new task use:
 
 ### Updating and deleting tasks
 The command below is to update and existing task and as well delete a task respectively
-`task-cli update 1 "Buy groceries and cook dinner"`
-`task-cli delete 1`
+`task-cli update {taskId} "Buy groceries and cook dinner"`
+`task-cli delete {taskId}`
 
 ### Marking a task as in progress or done
 use the command below to mark a task as in-progress or done
-`task-cli mark-in-progress 1` and
-`task-cli mark-done 1`
+`task-cli mark-in-progress {taskId}` and
+`task-cli mark-done {taskId}`
 
 ### Listing all taskst 
 Use this command to list all task
