@@ -1,6 +1,7 @@
 # TASK TRACKER
 Run the command `npm link` to create a link for the command "task-cli" in the node file
-project url : https://github.com/El-Partu/task-tracker
+project url : https://roadmap.sh/projects/task-tracker
+
 ### Adding a new task
 To create a new task use:
 `task-cli add "Buy groceries"`
