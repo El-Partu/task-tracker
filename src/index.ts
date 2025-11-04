@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import type { Task } from "./types/alias.js";
 import { Status } from "./types/enum.js";
-
+console.log(process.argv)
 const dbPath = path.resolve(process.cwd(), "db.json");
 let data: Task[] = [];
 

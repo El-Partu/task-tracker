@@ -2,6 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { Status } from "./types/enum.js";
+console.log(process.argv);
 const dbPath = path.resolve(process.cwd(), "db.json");
 let data = [];
 //Reading from db.json file
