@@ -18,7 +18,7 @@ use the command below to mark a task as in-progress or done
 `task-cli mark-in-progress {taskId}`  
 `task-cli mark-done {taskId}`
 
-### Listing all taskst 
+### Listing all tasks 
 Use this command to list all task  
 `task-cli list`
 
